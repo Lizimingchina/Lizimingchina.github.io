@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.0.1">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.0.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.0.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.0.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.0.1" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.0.1',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="WINDOWS10的Linux子系统          摘要:在Windows10系统中，增加了一项黑科技：Linux子系统，即Windows Subsystem for Linux，以下简称”WSL“。本文主要介绍了WSL的安装使用方法，以及一些比较基础的操作。 关键词 :WSL、新手入门。 1.前言作为刚接触Linux的新手，我们首要体验Linux的方式是通过VMVare等软件安装虚拟">
+<meta name="keywords" content="教程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="WSL(WINDOWS下的linux子系统)">
+<meta property="og:url" content="liziming.site/2019/03/30/WSL-WINDOWS下的linux子系统/index.html">
+<meta property="og:site_name" content="LZM的博客">
+<meta property="og:description" content="WINDOWS10的Linux子系统          摘要:在Windows10系统中，增加了一项黑科技：Linux子系统，即Windows Subsystem for Linux，以下简称”WSL“。本文主要介绍了WSL的安装使用方法，以及一些比较基础的操作。 关键词 :WSL、新手入门。 1.前言作为刚接触Linux的新手，我们首要体验Linux的方式是通过VMVare等软件安装虚拟">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="f:/markdown/1606010316_%E4%B8%89%E7%8F%AD_%E6%9D%8E%E5%AD%90%E9%93%AD/img/file-system-graphic.png">
+<meta property="og:image" content="f:/markdown/1606010316_%E4%B8%89%E7%8F%AD_%E6%9D%8E%E5%AD%90%E9%93%AD/img/1.png">
+<meta property="og:image" content="f:/markdown/1606010316_%E4%B8%89%E7%8F%AD_%E6%9D%8E%E5%AD%90%E9%93%AD/img/2.png">
+<meta property="og:image" content="f:/markdown/1606010316_%E4%B8%89%E7%8F%AD_%E6%9D%8E%E5%AD%90%E9%93%AD/img/3.png">
+<meta property="og:image" content="f:/markdown/1606010316_%E4%B8%89%E7%8F%AD_%E6%9D%8E%E5%AD%90%E9%93%AD/img/4.png">
+<meta property="og:image" content="f:/markdown/1606010316_%E4%B8%89%E7%8F%AD_%E6%9D%8E%E5%AD%90%E9%93%AD/img/5.png">
+<meta property="og:image" content="f:/markdown/1606010316_%E4%B8%89%E7%8F%AD_%E6%9D%8E%E5%AD%90%E9%93%AD/img/6.png">
+<meta property="og:image" content="f:/markdown/1606010316_%E4%B8%89%E7%8F%AD_%E6%9D%8E%E5%AD%90%E9%93%AD/img/7.png">
+<meta property="og:image" content="f:/markdown/1606010316_%E4%B8%89%E7%8F%AD_%E6%9D%8E%E5%AD%90%E9%93%AD/img/8.png">
+<meta property="og:image" content="f:/markdown/1606010316_%E4%B8%89%E7%8F%AD_%E6%9D%8E%E5%AD%90%E9%93%AD/img/9.png">
+<meta property="og:image" content="f:/markdown/1606010316_%E4%B8%89%E7%8F%AD_%E6%9D%8E%E5%AD%90%E9%93%AD/img/10.png">
+<meta property="og:image" content="f:/markdown/1606010316_%E4%B8%89%E7%8F%AD_%E6%9D%8E%E5%AD%90%E9%93%AD/img/11.png">
+<meta property="og:image" content="f:/markdown/1606010316_%E4%B8%89%E7%8F%AD_%E6%9D%8E%E5%AD%90%E9%93%AD/img/12.png">
+<meta property="og:image" content="f:/markdown/1606010316_%E4%B8%89%E7%8F%AD_%E6%9D%8E%E5%AD%90%E9%93%AD/img/13.png">
+<meta property="og:image" content="f:/markdown/1606010316_%E4%B8%89%E7%8F%AD_%E6%9D%8E%E5%AD%90%E9%93%AD/img/14.png">
+<meta property="og:image" content="f:/markdown/1606010316_%E4%B8%89%E7%8F%AD_%E6%9D%8E%E5%AD%90%E9%93%AD/img/15.png">
+<meta property="og:image" content="f:/markdown/1606010316_%E4%B8%89%E7%8F%AD_%E6%9D%8E%E5%AD%90%E9%93%AD/img/16.png">
+<meta property="og:image" content="f:/markdown/1606010316_%E4%B8%89%E7%8F%AD_%E6%9D%8E%E5%AD%90%E9%93%AD/img/17.png">
+<meta property="og:updated_time" content="2019-03-30T13:58:47.772Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="WSL(WINDOWS下的linux子系统)">
+<meta name="twitter:description" content="WINDOWS10的Linux子系统          摘要:在Windows10系统中，增加了一项黑科技：Linux子系统，即Windows Subsystem for Linux，以下简称”WSL“。本文主要介绍了WSL的安装使用方法，以及一些比较基础的操作。 关键词 :WSL、新手入门。 1.前言作为刚接触Linux的新手，我们首要体验Linux的方式是通过VMVare等软件安装虚拟">
+<meta name="twitter:image" content="f:/markdown/1606010316_%E4%B8%89%E7%8F%AD_%E6%9D%8E%E5%AD%90%E9%93%AD/img/file-system-graphic.png">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="liziming.site/2019/03/30/WSL-WINDOWS下的linux子系统/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>WSL(WINDOWS下的linux子系统) | LZM的博客</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">LZM的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">无所事事的咸鱼</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="liziming.site/2019/03/30/WSL-WINDOWS下的linux子系统/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Li Zi-ming">
+      <meta itemprop="description" content="我是老实人，别欺负我">
+      <meta itemprop="image" content="/images/th.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LZM的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">WSL(WINDOWS下的linux子系统)
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-03-30 21:57:19 / 修改时间：21:58:47" itemprop="dateCreated datePublished" datetime="2019-03-30T21:57:19+08:00">2019-03-30</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <div style="text-align:center"><h1><br>    WINDOWS10的Linux子系统<br>    </h1></div><br><div style="text-align:center"><br>    </div>
+
+<p><strong>摘要</strong>:在Windows10系统中，增加了一项黑科技：Linux子系统，即<em>Windows Subsystem for Linux</em>，以下简称”<em>WSL</em>“。本文主要介绍了<em>WSL</em>的安装使用方法，以及一些比较基础的操作。</p>
+<p><strong>关键词 </strong>:WSL、新手入门。</p>
+<h2 id="1-前言"><a href="#1-前言" class="headerlink" title="1.前言"></a>1.前言</h2><p>作为刚接触Linux的新手，我们首要体验Linux的方式是通过VMVare等软件安装虚拟机，再使用图形界面操作、练习命令；或者有些爱折腾的同学会选择双系统。前者通常比较占用内存资源，后者两个系统来回切换，也比较麻烦。而<em>Windows Subsystem for Linux (以下简称WSL)</em>为我们提供了一种新的选择。它能够在比较小的资源占用下，让我们体验到原生的Linux功能。本文将从安装入手，用图文一步步说明，起到一定的参考作用。</p>
+<h2 id="2-具体流程"><a href="#2-具体流程" class="headerlink" title="2.具体流程"></a>2.具体流程</h2><h3 id="原理了解"><a href="#原理了解" class="headerlink" title="原理了解"></a>原理了解</h3><p>可能大家比较好奇，Windows系统是闭源且有版权的系统，Linux是开源系统；而且双方的构成框架肯定不一样，是怎样同时存在的呢？</p>
+<p>实际上，WSL通过在Windows NT内核上模拟Linux内核接口，简单来说，安装的Linux系统实际上是以Windows NT内核为基础，进行接口封装，来模拟Linux内核。</p>
+<p>拿文件系统举例。</p>
+<h4 id="Linux上的文件系统"><a href="#Linux上的文件系统" class="headerlink" title="Linux上的文件系统"></a>Linux上的文件系统</h4><p>Linux通过虚拟文件系统（VFS）抽象文件系统操作，虚拟文件系统为用户模式程序提供了与文件系统交互的接口（通过系统调用，如open，read，chmod，stat等）。VFS为用户提供所有文件系统的单一命名空间视图，这能够允许多个文件系统共存，提供相同的操作和语义。</p>
+<p>在Linux中，文件系统安装在命名空间中的不同目录中。例如，硬盘驱动器可以安装在根目录/上，目录如/dev，/proc，/sys和/mnt 、/cdrom都可以安装不同的文件系统——这些文件系统可以位于不同的设备上。</p>
+<h4 id="Windows上的文件系统"><a href="#Windows上的文件系统" class="headerlink" title="Windows上的文件系统"></a>Windows上的文件系统</h4><p>Windows将所有系统资源概括为对象——不仅包括文件，还包括线程、共享内存部分和计时器等。所有打开文件的请求最终都通过NT内核中的对象管理器进行处理，该内核将请求通过I / O管理器路由到正确的文件系统驱动程序。文件系统驱动程序在Windows中实现的接口更简单，而且执行的要求更少。比方说，没有像Linux那样的inode结构或类似的东西;</p>
+<p>Windows中的文件系统通常安装在驱动器号上，如C：，D：等，尽管它们也可以安装在其他文件系统的目录中。这些驱动器号实际上是Win32的构造，而不是对象管理器直接处理的东西。对象管理器保留一个类似于Linux文件系统命名空间的命名方式，举个例子，<em>F:\face2face\ours</em>就是我们经常在资源管理器里看到的路径（目录层次）。</p>
+<h4 id="WSL中的文件系统"><a href="#WSL中的文件系统" class="headerlink" title="WSL中的文件系统"></a>WSL中的文件系统</h4><p>文件系统的模拟就是关键，Windows的Linux子系统必须将各种Linux文件系统操作转换为NT内核操作。WSL必须提供一个Linux系统文件可以存在的地方，其中包含所有必需的功能，比如Linux权限、符号链接和其他特殊文件，如FIFO。下面有一张官方的解释图：</p>
+<p><img src="F:/markdown/1606010316_%E4%B8%89%E7%8F%AD_%E6%9D%8E%E5%AD%90%E9%93%AD/img/file-system-graphic.png" alt="file-system-graphic"></p>
+<center>wsl文件系统</center>    
+
+<p>从上图我们可以知道当应用程序调用系统调用时，这由系统调用层处理，系统调用层定义各种内核入口点，如open、read、chmod、stat等。对于这些与文件相关的系统调用，系统调用层其实没有过地处理， 它基本上只是将调用请求向下转发给VFS。最终还是由NT内核实现。</p>
+<h3 id="系统安装"><a href="#系统安装" class="headerlink" title="系统安装"></a>系统安装</h3><p>既然是模拟，所以相比虚拟机和双系统而言，他比虚拟机占用更少的资源，但无法像双系统那样完整利用硬件资源。由于面世不久，wsl存在一些问题，目前来看还是“玩具”级别的，仅供新人玩玩还是足够的。在简单了解wsl的模拟机制后，接下来进行wsl的安装与应用。</p>
+<h4 id="第一步：启用Linux子系统功能"><a href="#第一步：启用Linux子系统功能" class="headerlink" title="第一步：启用Linux子系统功能"></a>第一步：启用Linux子系统功能</h4><p>由于该功能目前还处于测试阶段，并不是十分完善。因此该功能默认是关闭的，需要用户</p>
+<p>自行开启。</p>
+<p>首先，我们进入控制面板&gt;程序和功能板块：</p>
+<p><img src="F:/markdown/1606010316_%E4%B8%89%E7%8F%AD_%E6%9D%8E%E5%AD%90%E9%93%AD/img/1.png" style="height:300px"></p>
+<p>然后点击左边的启用或关闭Windows功能,会出现一个弹窗，如下所示。再勾选”适用于Linux的Windows”子程序。</p>
+<p><img src="F:/markdown/1606010316_%E4%B8%89%E7%8F%AD_%E6%9D%8E%E5%AD%90%E9%93%AD/img/2.png" alt="2"></p>
+<p>至此，就将该功能启用。第一步完成。</p>
+<h4 id="第二步：选择喜欢的Linux发行版"><a href="#第二步：选择喜欢的Linux发行版" class="headerlink" title="第二步：选择喜欢的Linux发行版"></a>第二步：选择喜欢的Linux发行版</h4><p>接下来就是发行版的下载。与之前我们了解到的不太一样，这里系统必须从Windows的应用商店进行下载。在大家电脑上有这么一个图标：</p>
+<p><img src="F:/markdown/1606010316_%E4%B8%89%E7%8F%AD_%E6%9D%8E%E5%AD%90%E9%93%AD/img/3.png" alt="3"></p>
+<p>点击进入，搜索Linux：<img src="F:/markdown/1606010316_%E4%B8%89%E7%8F%AD_%E6%9D%8E%E5%AD%90%E9%93%AD/img/4.png" style="height:0px"></p>
+<p><img src="F:/markdown/1606010316_%E4%B8%89%E7%8F%AD_%E6%9D%8E%E5%AD%90%E9%93%AD/img/5.png" style="height:300px"></p>
+<p>之后我们会发现商店里面一共有五种发行版供用户使用：</p>
+<p><img src="F:/markdown/1606010316_%E4%B8%89%E7%8F%AD_%E6%9D%8E%E5%AD%90%E9%93%AD/img/6.png" style="height:300px"></p>
+<p>在这里当然是选择大名鼎鼎的Ubuntu来尝试啦。在这里，有一点注意下：</p>
+<p><img src="F:/markdown/1606010316_%E4%B8%89%E7%8F%AD_%E6%9D%8E%E5%AD%90%E9%93%AD/img/7.png" alt="7"></p>
+<p>系统大小显示是215MB左右，这是18.04版本，16.04更小，为196.89MB，可能与之前分析的NT内核模拟有关系。</p>
+<p>陷入漫长的等待，商店速度感人。。。。</p>
+<p><img src="F:/markdown/1606010316_%E4%B8%89%E7%8F%AD_%E6%9D%8E%E5%AD%90%E9%93%AD/img/8.png" style="height:100px;width:500px"></p>
+<p><img src="F:/markdown/1606010316_%E4%B8%89%E7%8F%AD_%E6%9D%8E%E5%AD%90%E9%93%AD/img/9.png" style="width:500px;height:100px"></p>
+<p>下载完毕。接下来进入系统：</p>
+<p><img src="F:/markdown/1606010316_%E4%B8%89%E7%8F%AD_%E6%9D%8E%E5%AD%90%E9%93%AD/img/10.png" style="height:260px"></p>
+<p>没完没了了。。。。</p>
+<p>好了！！设置用户名跟密码：</p>
+<p><img src="F:/markdown/1606010316_%E4%B8%89%E7%8F%AD_%E6%9D%8E%E5%AD%90%E9%93%AD/img/11.png" style="height:260px"></p>
+<p>一顿操作过后，终于进入了我们的Ubuntu系统。</p>
+<p><img src="F:/markdown/1606010316_%E4%B8%89%E7%8F%AD_%E6%9D%8E%E5%AD%90%E9%93%AD/img/12.png" style="height:260px"></p>
+<h4 id="第三步：我们还可以干些啥？"><a href="#第三步：我们还可以干些啥？" class="headerlink" title="第三步：我们还可以干些啥？"></a>第三步：我们还可以干些啥？</h4><p>很多人在一开始接触字符终端有点不太适应。WSL默认就是字符界面，有点遗憾。不过程序员总有办法解决。我们可以自行配置图形界面。</p>
+<p>有两种解决办法</p>
+<ul>
+<li>使用X-Windows安装使用图形化界面</li>
+<li>通过本机远程桌面连接</li>
+</ul>
+<p>这里我们将采用第二种方式，把WSL打造成一个服务器形式地远程系统。</p>
+<p><strong>安装LXDE</strong>（一种轻量级桌面环境，比xfce更轻量）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install lxde</span><br></pre></td></tr></table></figure>
+<p><strong>安装vnc server</strong>（一种开源的远程桌面协议服务器）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install vnc4server</span><br></pre></td></tr></table></figure>
+<p><strong>生成vnc server配置文件</strong>（第一次使用需要生成配置文件，并且设置密码）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">vncserver :1</span><br><span class="line">vncserver -<span class="built_in">kill</span> :1</span><br></pre></td></tr></table></figure>
+<p><strong>编辑~/.vnc/xstartup文件，在尾部添加:</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">lxterminal &amp;</span><br><span class="line">/usr/bin/lxsession -s LXDE &amp;</span><br></pre></td></tr></table></figure>
+<p><strong>启用vnc server服务</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vncserver -geometry 800x600</span><br></pre></td></tr></table></figure>
+<p>这里的800x600是分辨率，可以自行根据电脑的性能设置，一般电脑是1080P的话，设置这个比较好，不会占用过多的资源。</p>
+<p><strong>最后一步，下载VNC Viewer软件，输入：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:1</span><br></pre></td></tr></table></figure>
+<p>大功告成！！！！</p>
+<h2 id="3-结果"><a href="#3-结果" class="headerlink" title="3.结果"></a>3.结果</h2><p>我们可以在终端里尝试一些命令：ls、mkdir、top等。</p>
+<p><img src="F:/markdown/1606010316_%E4%B8%89%E7%8F%AD_%E6%9D%8E%E5%AD%90%E9%93%AD/img/13.png" style="height:300px"></p>
+<p><img src="F:/markdown/1606010316_%E4%B8%89%E7%8F%AD_%E6%9D%8E%E5%AD%90%E9%93%AD/img/14.png" style="height:300px"></p>
+<p>其实，对于一个新手而言，这是一个极其方便的途径来学习Linux。这种子系统的方式其实挺方便的。而且对硬件要求不高。从任务管理器里截了一张挺有意思的图：</p>
+<p><img src="F:/markdown/1606010316_%E4%B8%89%E7%8F%AD_%E6%9D%8E%E5%AD%90%E9%93%AD/img/15.png" style="width:600px"></p>
+<p>这个进程占用极其地低，真不愧是微软（巨硬）啊。</p>
+<p>通过之前介绍的方式，我们进入了桌面环境（这里实际上使用Ubuntu16.04，18.04版本尝试过，没有成功，改用16.04一步成功），由于使用了一个极其轻量桌面软件，所以看起来比较简陋，软件需要我们自行安装：</p>
+<p><img src="F:/markdown/1606010316_%E4%B8%89%E7%8F%AD_%E6%9D%8E%E5%AD%90%E9%93%AD/img/16.png" style="width:500px"></p>
+<p>可以看到，这是一个比较简陋的桌面（都说了是轻量级的嘛）。</p>
+<p><img src="F:/markdown/1606010316_%E4%B8%89%E7%8F%AD_%E6%9D%8E%E5%AD%90%E9%93%AD/img/17.png" style="width:500px"></p>
+<p>打开终端，继续我们上课学习的东西。</p>
+<p>PS:装了这么半天，最后不还是得老老实实敲命令么！</p>
+<div style="page-break-after: always;"></div>
+
+<h2 id="4-结论"><a href="#4-结论" class="headerlink" title="4.结论"></a>4.结论</h2><p>本文从最开始的安装，到最后的桌面环境尝试，给出了较为详细的讲解步骤。在文章的开头，就使用文件系统的模拟来介绍，说到底WSL还是利用NT内核进行的调用封装，但这并不影响新手的正常使用。</p>
+<p>从便利性的角度，采用WSL方式其实比安装虚拟机或者双系统更加方便，整个过程比较傻瓜式。如果对图像界面有要求的话（我就是不习惯字符界面），按照本文几分钟就可以配置一个桌面环境；从资源占用的角度上来讲，WSL占用了较低的硬件资源，反应也较为迅速。</p>
+<p>我们何乐而不为呢？</p>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p>【1】:<a href="http://ragibhasan.com/linux/" target="_blank" rel="noopener">http://ragibhasan.com/linux/</a><br><br>【2】<a href="https://www.howtogeek.com/249966/how-to-install-and-use-the-linux-bash-shell-on-windows-10/" target="_blank" rel="noopener">https://www.howtogeek.com/249966/how-to-install-and-use-the-linux-bash-shell-on-windows-10/</a><br><br>【3】<a href="https://www.zhihu.com/question/276605686" target="_blank" rel="noopener">https://www.zhihu.com/question/276605686</a><br><br>【4】<a href="https://blogs.msdn.microsoft.com/wsl/2016/06/15/wsl-file-system-support/" target="_blank" rel="noopener">https://blogs.msdn.microsoft.com/wsl/2016/06/15/wsl-file-system-support/</a><br><br>【5】<a href="https://www.jianshu.com/p/bc38ed12da1d" target="_blank" rel="noopener">https://www.jianshu.com/p/bc38ed12da1d</a><br><br>【6】<a href="https://www.jianshu.com/p/aca81f8c7f08" target="_blank" rel="noopener">https://www.jianshu.com/p/aca81f8c7f08</a><br><br>【7】<a href="https://blog.csdn.net/li528405176/article/details/82263534" target="_blank" rel="noopener">https://blog.csdn.net/li528405176/article/details/82263534</a><br><br>【8】<a href="https://blog.csdn.net/qq_33062317/article/details/80050325" target="_blank" rel="noopener">https://blog.csdn.net/qq_33062317/article/details/80050325</a><br><br>【9】<a href="https://www.cnblogs.com/xuliangxing/p/7642650.html" target="_blank" rel="noopener">https://www.cnblogs.com/xuliangxing/p/7642650.html</a><br><br>【10】<a href="http://www.lijiejie.com/ubuntu-vps-config-lxde-vnc/" target="_blank" rel="noopener">http://www.lijiejie.com/ubuntu-vps-config-lxde-vnc/</a><br><br>【11】<a href="https://www.vandorp.biz/2012/01/installing-a-lightweight-lxdevnc-desktop-environment-on-your-ubuntudebian-vps/" target="_blank" rel="noopener">https://www.vandorp.biz/2012/01/installing-a-lightweight-lxdevnc-desktop-environment-on-your-ubuntudebian-vps/</a><br></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/教程/" rel="tag"># 教程</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/03/30/第一天！纪念-1/" rel="next" title="第一天！纪念">
+                <i class="fa fa-chevron-left"></i> 第一天！纪念
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/th.jpg" alt="Li Zi-ming">
+            
+              <p class="site-author-name" itemprop="name">Li Zi-ming</p>
+              <div class="site-description motion-element" itemprop="description">我是老实人，别欺负我</div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">8</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">4</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/Lizimingchina" title="GitHub &rarr; https://github.com/Lizimingchina" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">1.</span> <span class="nav-text">    WINDOWS10的Linux子系统    </span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-前言"><span class="nav-number">1.1.</span> <span class="nav-text">1.前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-具体流程"><span class="nav-number">1.2.</span> <span class="nav-text">2.具体流程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#原理了解"><span class="nav-number">1.2.1.</span> <span class="nav-text">原理了解</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Linux上的文件系统"><span class="nav-number">1.2.1.1.</span> <span class="nav-text">Linux上的文件系统</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Windows上的文件系统"><span class="nav-number">1.2.1.2.</span> <span class="nav-text">Windows上的文件系统</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#WSL中的文件系统"><span class="nav-number">1.2.1.3.</span> <span class="nav-text">WSL中的文件系统</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#系统安装"><span class="nav-number">1.2.2.</span> <span class="nav-text">系统安装</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#第一步：启用Linux子系统功能"><span class="nav-number">1.2.2.1.</span> <span class="nav-text">第一步：启用Linux子系统功能</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#第二步：选择喜欢的Linux发行版"><span class="nav-number">1.2.2.2.</span> <span class="nav-text">第二步：选择喜欢的Linux发行版</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#第三步：我们还可以干些啥？"><span class="nav-number">1.2.2.3.</span> <span class="nav-text">第三步：我们还可以干些啥？</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-结果"><span class="nav-number">1.3.</span> <span class="nav-text">3.结果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-结论"><span class="nav-number">1.4.</span> <span class="nav-text">4.结论</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献"><span class="nav-number">1.5.</span> <span class="nav-text">参考文献</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Li Zi-ming</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.0.1</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=7.0.1"></script>
+
+  <script src="/js/src/motion.js?v=7.0.1"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=7.0.1"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=7.0.1"></script>
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=7.0.1"></script>
+<script src="/js/src/post-details.js?v=7.0.1"></script>
+
+
+
+  
+
+
+  <script src="/js/src/next-boot.js?v=7.0.1"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
